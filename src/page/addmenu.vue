@@ -5,7 +5,7 @@
             <el-breadcrumb-item :to="{ path: '/menu' }"
                 >菜单管理</el-breadcrumb-item
             >
-            <el-breadcrumb-item>{{ tip }}页面</el-breadcrumb-item>
+            <el-breadcrumb-item>菜单{{ tip }}页面</el-breadcrumb-item>
         </el-breadcrumb>
         <el-form
             label-width="100px"
@@ -68,7 +68,7 @@ import axios from "axios";
 export default {
     mounted() {
         // console.log(this.$route);
-        if (this.$route.params.id != "add") {
+        if (this.$route.params.id) {
             this.tip = "修改";
             axios
                 .get("/api/menuinfo?id=" + this.$route.params.id)
@@ -93,10 +93,11 @@ export default {
             // this.settableData(this.menu);
             // this.$router.push("/menu");
             let url = "/api/menuadd";
-            if (this.$route.params.id != "add") {
+            if (this.$route.params.id) {
                 url = "/api/menuedit";
                 this.menu.id = this.$route.params.id;
             }
+            // validate表单验证方法
             this.$refs[menuform].validate((valid) => {
                 if (valid) {
                     axios.post(url, this.menu).then((res) => {
@@ -149,7 +150,7 @@ export default {
                 type: [
                     {
                         required: true,
-                        message: "请选择活动资源",
+                        message: "请选择状态",
                         trigger: "change",
                     },
                 ],
