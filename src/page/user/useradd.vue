@@ -7,15 +7,29 @@
             >
             <el-breadcrumb-item>管理员{{ tip }}页面</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-form label-width="100px" style="width: 600px" :rules="rules">
-            <el-form-item label="角色编号" prop="userid">
-                <el-input v-model="user.userid"></el-input>
+        <el-form
+            label-width="100px"
+            style="width: 400px"
+            :rules="rules"
+            ref="user"
+            :model="user"
+        >
+            <el-form-item label="所属角色" prop="roleid">
+                <el-select placeholder="请选择角色" v-model="user.roleid">
+                    <el-option
+                        v-for="val in userarr"
+                        :key="val.id"
+                        :label="val.rolename"
+                        :value="val.id"
+                    ></el-option
+                ></el-select>
             </el-form-item>
             <el-form-item label="管理员名称" prop="username">
                 <el-input v-model="user.username"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-                <el-input v-model="user.password"></el-input>
+                <el-input v-model="user.password" type="password"></el-input>
+                <span class="sp1" v-if="$route.params.id">留空则不修改</span>
             </el-form-item>
             <el-form-item label="管理状态">
                 <el-switch
@@ -25,7 +39,7 @@
                 ></el-switch>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="add">立即添加</el-button>
+                <el-button type="primary" @click="add('user')">确认</el-button>
                 <el-button @click="rtn">取消</el-button>
             </el-form-item>
         </el-form>
@@ -38,32 +52,20 @@ export default {
     data() {
         return {
             tip: "添加",
-            user: { userid: "", username: "", password: "", status: 1 },
+            userarr: [],
+            user: { roleid: "", username: "", password: "", status: 1 },
             rules: {
-                userid: [
+                roleid: [
                     {
                         required: true,
-                        message: "请输入角色编号",
+                        message: "选择所属角色",
                         trigger: "blur",
                     },
                 ],
                 username: [
                     {
                         required: true,
-                        message: "请输入角色名称",
-                        trigger: "blur",
-                    },
-                ],
-                password: [
-                    {
-                        required: true,
-                        message: "请输入密码",
-                        trigger: "blur",
-                    },
-                    {
-                        min: 6,
-                        max: 15,
-                        message: "长度在 6 到 15 个字符",
+                        message: "请输入管理员名称",
                         trigger: "blur",
                     },
                 ],
@@ -71,17 +73,38 @@ export default {
         };
     },
     mounted() {
-        axios.get("/api/rolelist").then(res=>{
-            if (res.data.code == 200) {
-                   console.log(res);
-                }
-        })
+        if (this.$route.params.id) {
+            this.tip = "修改";
+            axios
+                .get("/api/userinfo?uid=" + this.$route.params.id)
+                .then((res) => {
+                    this.user = res.data.list;
+                    this.user.password = "";
+                });
+        }
+        axios({
+            url: "/api/rolelist",
+        }).then((res) => {
+            this.userarr = res.data.list;
+        });
     },
     methods: {
-        add() {
-            axios.post("/api/useradd", this.uesr).then((res) => {
-                if (res.data.code == 200) {
-                    this.$router.push("/user");
+        add(user) {
+            let url = "/api/useradd";
+            if (this.$route.params.id) {
+                url = "/api/useredit";
+                this.user.uid = this.$route.params.id;
+            }
+            // validate表单验证方法
+            this.$refs[user].validate((valid) => {
+                if (valid) {
+                    axios.post(url, this.user).then((res) => {
+                        if (res.data.code == 200) {
+                            this.$router.push("/user");
+                        }
+                    });
+                } else {
+                    return false;
                 }
             });
         },
@@ -93,4 +116,7 @@ export default {
 </script>
 
 <style>
+.sp1 {
+    color: green;
+}
 </style>

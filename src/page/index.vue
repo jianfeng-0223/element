@@ -1,7 +1,11 @@
 <template>
     <el-container class="el-container-big">
         <el-header>
-            <h1 class="toptitle">流浪地球曲速引擎后台管理系统</h1>
+            <p class="p1">流浪地球曲速引擎后台管理系统</p>
+            <div class="welcome">
+                <span>欢迎：{{ tableData ? tableData.username : " " }}</span>
+                <a href="javascript:;" @click="quitout">安全退出</a>
+            </div>
         </el-header>
         <el-container>
             <el-aside width="220px">
@@ -20,8 +24,18 @@
 <script>
 import myaside from "../view/aside";
 import axios from "axios";
+import { mapState } from "vuex";
 export default {
     components: { myaside },
+    computed: {
+        ...mapState(["tableData"]),
+    },
+    methods: {
+        quitout() {
+            this.$store.dispatch("settable");
+            this.$router.replace("/login");
+        },
+    },
     mounted() {
         // axios.get("/su?cb=&wd=123").then(res=>{
         //   console.log(res);
@@ -48,13 +62,7 @@ export default {
 .el-footer {
     background-color: #409eff;
 }
-.toptitle {
-    height: 100%;
-    text-align: center;
-    line-height: 60px;
-    font-size: 30px;
-    color: hotpink;
-}
+
 .copyright {
     text-align: center;
     height: 100%;
@@ -63,5 +71,28 @@ export default {
 }
 .el-breadcrumb {
     margin-bottom: 20px;
+}
+.p1 {
+    float: left;
+    font-size: 30px;
+    line-height: 60px;
+    padding-left: 400px;
+    color: tomato;
+    font-weight: 600;
+}
+.welcome {
+    float: right;
+    line-height: 60px;
+    padding-right: 30px;
+    font-size: 18px;
+}
+.welcome a {
+    color: #fff;
+    font-size: 14px;
+    margin-left: 20px;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: tomato;
 }
 </style>

@@ -3,70 +3,118 @@ import vueRouter from "vue-router"
 
 Vue.use(vueRouter)
 
-export default new vueRouter({
+const router = new vueRouter({
   routes: [{
-    path: "/",
-    meta: {
-      selected: "/"
+      path: "/",
+      meta: {
+        selected: "/"
+      },
+      component: () => import("@/page/index.vue"),
+      children: [{
+          path: "menu",
+          component: () => import("../page/menu.vue"),
+          meta: {
+            selected: "/menu"
+          }
+        }, {
+          path: "menu/add",
+          component: () => import("../page/addmenu.vue"),
+          meta: {
+            selected: "/menu"
+          }
+        }, {
+          path: "menu/:id",
+          component: () => import("../page/addmenu.vue"),
+          meta: {
+            selected: "/menu"
+          }
+        },
+        {
+          path: "role",
+          component: () => import("../page/role/index.vue"),
+          meta: {
+            selected: "/role"
+          }
+        }, {
+          path: "role/add",
+          component: () => import("../page/role/roleadd.vue"),
+          meta: {
+            selected: "/role"
+          }
+        }, {
+          path: "role/:id",
+          component: () => import("../page/role/roleadd.vue"),
+          meta: {
+            selected: "/role"
+          }
+        },
+        {
+          path: "user",
+          component: () => import("../page/user/index.vue"),
+          meta: {
+            selected: "/user"
+          }
+        }, {
+          path: "user/add",
+          component: () => import("../page/user/useradd.vue"),
+          meta: {
+            selected: "/user"
+          }
+        }, {
+          path: "user/:id",
+          component: () => import("../page/user/useradd.vue"),
+          meta: {
+            selected: "/user"
+          }
+        },
+        {
+          path: "cate",
+          component: () => import("../page/shop/index.vue"),
+          meta: {
+            selected: "/cate"
+          }
+        }, {
+          path: "cate/add",
+          component: () => import("../page/shop/shopadd.vue"),
+          meta: {
+            selected: "/cate"
+          }
+        }, {
+          path: "cate/:id",
+          component: () => import("../page/shop/shopadd.vue"),
+          meta: {
+            selected: "/cate"
+          }
+        }
+      ]
     },
-    component: () => import("@/page/index.vue"),
-    children: [{
-        path: "menu",
-        component: () => import("../page/menu.vue"),
-        meta: {
-          selected: "/menu"
-        }
-      }, {
-        path: "menu/add",
-        component: () => import("../page/addmenu.vue"),
-        meta: {
-          selected: "/menu"
-        }
-      }, {
-        path: "menu/:id",
-        component: () => import("../page/addmenu.vue"),
-        meta: {
-          selected: "/menu"
-        }
-      },
-      {
-        path: "role",
-        component: () => import("../page/role/index.vue"),
-        meta: {
-          selected: "/role"
-        }
-      }, {
-        path: "role/add",
-        component: () => import("../page/role/roleadd.vue"),
-        meta: {
-          selected: "/role"
-        }
-      }, {
-        path: "role/:id",
-        component: () => import("../page/role/roleadd.vue"),
-        meta: {
-          selected: "/role"
-        }
-      },
-      {
-        path: "user",
-        component: () => import("../page/user/index.vue"),
-        meta: {
-          selected: "/user"
-        }
-      }, {
-        path: "user/add",
-        component: () => import("../page/user/useradd.vue"),
-        meta: {
-          selected: "/user"
-        }
-      }, {
-        path: "user/:id",
-        component: () => import("../page/user/useradd.vue"),
-        meta: {
-          selected: "/user"
-        }
-      }
-    ]
-  }]
+    {
+      path: "/login",
+      component: () => import("../page/login.vue"),
+    }
+  ]
 })
+import store from "../store"
+router.beforeEach((to, from, next) => {
+  if (to.fullPath == "/login") {
+    next()
+  } else {
+    let data = store.state.tableData
+    if (data == null) {
+      next("/login")
+    } else {
+    //   console.log(to);
+      // console.log(store.state.tableData.menus_url)
+      let nowurl = to.meta.selected
+    //   console.log(nowurl);
+      let nexturl = store.state.tableData.menus_url;
+      nexturl.push("/")
+      if (nexturl.indexOf(nowurl) != -1) {
+        next()
+      } else {
+        next("/")
+      }
+    }
+  }
+})
+export default router
