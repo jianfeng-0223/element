@@ -11,7 +11,7 @@
         <el-menu-item index="/"><i class="el-icon-house"></i>首页</el-menu-item>
         <el-submenu
             :index="val.icon"
-            v-for="val in tableData.menus"
+            v-for="val in tableData ? tableData.menus : []"
             :key="val.id"
         >
             <template slot="title">
@@ -37,19 +37,13 @@ export default {
     },
     data() {
         return {
-            navmenu: [],
+            // navmenu: [],
             default_active: "",
         };
     },
     mounted() {
         // console.log(this.tableData);
         this.default_active = this.$route.meta.selected;
-        // axios({
-        //     url: "/api/menulist",
-        //     params: { istree: 1 },
-        // }).then((res) => {
-        //     this.navmenu = res.data.list;
-        // });
     },
     watch: {
         $route(newval) {

@@ -16,7 +16,7 @@
             ref="role"
         >
             <el-form-item label="角色名称" prop="rolename">
-                <el-input v-model="role.rolename"></el-input>
+                <el-input v-model="role.rolename"  placeholder="请输角色名称"></el-input>
             </el-form-item>
             <el-form-item label="角色权限">
                 <el-tree
@@ -53,7 +53,7 @@ export default {
     mounted() {
         if (this.$route.params.id) {
             this.tip = "修改";
-            axios
+            this.axios
                 .get("/api/roleinfo?id=" + this.$route.params.id)
                 .then((res) => {
                     this.role = res.data.list;
@@ -64,9 +64,7 @@ export default {
                         : [];
                 });
         }
-        axios({
-            url: "/api/menulist?istree=1",
-        }).then((res) => {
+        this.axios.get("/api/menulist?istree=1").then((res) => {
             this.rolearr = res.data.list;
         });
     },

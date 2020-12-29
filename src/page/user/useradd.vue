@@ -25,10 +25,10 @@
                 ></el-select>
             </el-form-item>
             <el-form-item label="管理员名称" prop="username">
-                <el-input v-model="user.username"></el-input>
+                <el-input v-model="user.username"  placeholder="请输入写管理员名称"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="user.password" type="password"></el-input>
+            <el-form-item label="密码" prop="password" >
+                <el-input v-model="user.password" type="password"  placeholder="请输入密码"></el-input>
                 <span class="sp1" v-if="$route.params.id">留空则不修改</span>
             </el-form-item>
             <el-form-item label="管理状态">
@@ -75,16 +75,14 @@ export default {
     mounted() {
         if (this.$route.params.id) {
             this.tip = "修改";
-            axios
+            this.axios
                 .get("/api/userinfo?uid=" + this.$route.params.id)
                 .then((res) => {
                     this.user = res.data.list;
                     this.user.password = "";
                 });
         }
-        axios({
-            url: "/api/rolelist",
-        }).then((res) => {
+        this.axios.get("/api/rolelist").then((res) => {
             this.userarr = res.data.list;
         });
     },
@@ -98,7 +96,7 @@ export default {
             // validate表单验证方法
             this.$refs[user].validate((valid) => {
                 if (valid) {
-                    axios.post(url, this.user).then((res) => {
+                    this.axios.post(url, this.user).then((res) => {
                         if (res.data.code == 200) {
                             this.$router.push("/user");
                         }

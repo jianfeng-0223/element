@@ -3,6 +3,7 @@ import Vuex from "vuex"
 import creatPersistedState from "vuex-persistedstate"
 
 
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({

@@ -85,6 +85,25 @@ const router = new vueRouter({
           meta: {
             selected: "/cate"
           }
+        },
+        {
+          path: "specs",
+          component: () => import("../page/goods/index.vue"),
+          meta: {
+            selected: "/specs"
+          }
+        }, {
+          path: "specs/add",
+          component: () => import("../page/goods/specs.vue"),
+          meta: {
+            selected: "/specs"
+          }
+        }, {
+          path: "specs/:id",
+          component: () => import("../page/goods/specs.vue"),
+          meta: {
+            selected: "/specs"
+          }
         }
       ]
     },
@@ -103,12 +122,14 @@ router.beforeEach((to, from, next) => {
     if (data == null) {
       next("/login")
     } else {
-    //   console.log(to);
+      //   console.log(to);
       // console.log(store.state.tableData.menus_url)
       let nowurl = to.meta.selected
-    //   console.log(nowurl);
+      //   console.log(nowurl);
       let nexturl = store.state.tableData.menus_url;
-      nexturl.push("/")
+      if (nexturl.indexOf("/") == -1) {
+        nexturl.push("/")
+      }
       if (nexturl.indexOf(nowurl) != -1) {
         next()
       } else {

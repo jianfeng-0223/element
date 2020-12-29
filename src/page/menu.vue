@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import axios from "axios";
 // import { mapState } from "vuex";
 export default {
     methods: {
@@ -78,7 +77,7 @@ export default {
                 type: "warning",
             })
                 .then(() => {
-                    axios.post("/api/menudelete", { id }).then((res) => {
+                    this.axios.post("/api/menudelete", { id }).then((res) => {
                         if (res.data.code == 200) {
                             this.$message({
                                 type: "success",
@@ -105,7 +104,20 @@ export default {
     //   ...mapState(["tableData"]),
     // },
     mounted() {
-        axios.get("/api/menulist?istree=1").then((res) => {
+        // axios.get("/api/menulist?istree=1").then((res) => {
+        //     this.tableData = res.data.list;
+        // });
+        // axios({
+        //     url: "/api/menulist",
+        //     method: "get",
+        //     params: { istree: 1 },
+        //     headers: {
+        //         Authorization: this.$store.state.tableData.token,
+        //     },
+        // }).then((res) => {
+        //     this.tableData = res.data.list;
+        // });
+        this.axios.get("/api/menulist", { istree: 1 }).then((res) => {
             this.tableData = res.data.list;
         });
     },

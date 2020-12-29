@@ -16,7 +16,7 @@
             ref="menu"
         >
             <el-form-item label="菜单名称" prop="title">
-                <el-input v-model="menu.title"></el-input>
+                <el-input v-model="menu.title"  placeholder="请输入菜单名称"></el-input>
             </el-form-item>
             <el-form-item label="上级菜单" prop="pid">
                 <el-select
@@ -40,10 +40,10 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="菜单图标" v-show="menu.type == 1">
-                <el-input type="text" v-model="menu.icon"></el-input>
+                <el-input type="text" v-model="menu.icon"  placeholder="请输入菜单图标"></el-input>
             </el-form-item>
             <el-form-item label="菜单地址" v-show="menu.type == 2">
-                <el-input type="text" v-model="menu.url"></el-input>
+                <el-input type="text" v-model="menu.url"  placeholder="请输入菜单地址"></el-input>
             </el-form-item>
             <el-form-item label="菜单状态">
                 <el-switch
@@ -63,23 +63,19 @@
 </template>
 
 <script>
-import axios from "axios";
 // import { mapMutations } from "vuex";
 export default {
     mounted() {
         // console.log(this.$route);
         if (this.$route.params.id) {
             this.tip = "修改";
-            axios
+            this.axios
                 .get("/api/menuinfo?id=" + this.$route.params.id)
                 .then((res) => {
                     this.menu = res.data.list;
                 });
         }
-        axios({
-            url: "/api/menulist",
-            params: { pid: 0 },
-        }).then((res) => {
+        this.axios.get("/api/menulist", { pid: 0 }).then((res) => {
             this.menuarr = res.data.list;
         });
     },
@@ -100,7 +96,7 @@ export default {
             // validate表单验证方法
             this.$refs[menuform].validate((valid) => {
                 if (valid) {
-                    axios.post(url, this.menu).then((res) => {
+                    this.axios.post(url, this.menu).then((res) => {
                         if (res.data.code == 200) {
                             this.$router.push("/menu");
                         }

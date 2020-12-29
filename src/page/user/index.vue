@@ -43,7 +43,7 @@
         </el-table>
         <el-pagination
             layout="prev, pager, next"
-            :total="totle"
+            :total="total"
             :page-size="size"
             :background="true"
             @current-change="changePage"
@@ -53,15 +53,20 @@
 </template>
 
 <script>
-import axios from "axios";
+import qs from "qs";
 export default {
     methods: {
         changePage(num) {
-            axios
-                .get("/api/userlist?size=" + this.size + "&page=" + num)
-                .then((res) => {
-                    this.userData = res.data.list;
-                });
+            let obj = { size: this.size, page: num };
+            let str = qs.stringify(obj);
+            this.axios.get("/api/userlist?"+str).then((res) => {
+                this.userData = res.data.list;
+            });
+            // axios
+            //     .get("/api/userlist?size=" + this.size + "&page=" + num)
+            //     .then((res) => {
+            //         this.userData = res.data.list;
+            //     });
         },
         add() {
             this.$router.push("user/add");
@@ -73,7 +78,7 @@ export default {
                 type: "warning",
             })
                 .then(() => {
-                    axios.post("/api/userdelete", { uid }).then((res) => {
+                    this.axios.post("/api/userdelete", { uid }).then((res) => {
                         if (res.data.code == 200) {
                             this.$message({
                                 type: "success",
@@ -93,20 +98,29 @@ export default {
     },
     data() {
         return {
-            totle: 0,
+            total: 0,
             page: 1,
             size: 3,
             userData: [],
         };
     },
     mounted() {
-        axios
-            .get("/api/userlist?size=" + this.size + "&page=" + this.page)
-            .then((res) => {
-                this.userData = res.data.list;
-            });
-        axios.get("/api/usercount").then((res) => {
-            this.totle = res.data.list[0].total;
+        let obj = { size: this.size, page: this.page };
+        let str = qs.stringify(obj);
+        this.axios.get("/api/userlist?"+str).then((res) => {
+            this.userData = res.data.list;
+        });
+        // this.axios
+        //     .get("/api/userlist?size=" + this.size + "&page=" + this.page)
+        //     .then((res) => {
+        //         this.userData = res.data.list;
+        //     });
+        this.axios.get("/api/usercount").then((res) => {
+            if (res.data.code == 200) {
+                this.total=res.data.list[0].total
+            }else{
+                this.$message(res.data.msg)
+            }
         });
     },
 };
@@ -116,7 +130,7 @@ export default {
 .addbutton {
     margin-bottom: 10px;
 }
-.el-pagination{
+.el-pagination {
     margin-top: 20px;
 }
 </style>
