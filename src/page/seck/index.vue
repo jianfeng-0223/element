@@ -2,29 +2,17 @@
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>商品规格管理</el-breadcrumb-item></el-breadcrumb
+            <el-breadcrumb-item>商品管理</el-breadcrumb-item></el-breadcrumb
         >
         <el-button type="primary" size="medium" @click="add" class="addbutton"
             >添加</el-button
         >
-        <el-table
-            :data="specsData"
-            stripe
-            style="width: 100%"
-            border
-            row-key="id"
-            :tree-props="{ children: 'children' }"
-        >
-            <el-table-column prop="id" label="商品规格编号"> </el-table-column>
-            <el-table-column prop="specsname" label="商品规格名称">
+        <el-table :data="seckData" stripe style="width: 100%" border>
+            <el-table-column prop="id" label="商品编号"> </el-table-column>
+            <el-table-column prop="title" label="商品名称"> </el-table-column>
+            <el-table-column prop="begintime" label="开始时间">
             </el-table-column>
-            <el-table-column prop="attrs" label="商品规格属性">
-                <template slot-scope="val">
-                    <el-tag type="danger" v-for="(item, ind) in val.row.attrs" :key="ind">
-                        {{ item }}</el-tag
-                    >
-                </template>
-            </el-table-column>
+            <el-table-column prop="endtime" label="结束时间"> </el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="item">
                     <el-tag
@@ -41,7 +29,7 @@
                     <el-button
                         type="primary"
                         size="small"
-                        @click="$router.push('/specs/' + item.row.id)"
+                        @click="$router.push('/seck/' + item.row.id)"
                         >编辑</el-button
                     >
                     <el-button
@@ -57,22 +45,26 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
     mounted() {
-        this.axios.get("/api/specslist").then((res) => {
+        this.axios.get("/api/secklist").then((res) => {
             if (res.data.code == 200) {
-                this.specsData = res.data.list;
+                this.seckData = res.data.list;
+                this.seckData.forEach((val) => {
+                    val.begintime = moment(parseInt(val.begintime)).format(
+                        "YYYY/MM/DD hh:mm:ss"
+                    );
+                    val.endtime = moment(parseInt(val.endtime)).format(
+                        "YYYY/MM/DD hh:mm:ss"
+                    );
+                });
             }
         });
     },
-    data() {
-        return {
-            specsData: [],
-        };
-    },
     methods: {
         add() {
-            this.$router.push("specs/add");
+            this.$router.push("seck/add");
         },
         del(id) {
             //   this.tableData.splice(v, 1);
@@ -82,13 +74,13 @@ export default {
                 type: "warning",
             })
                 .then(() => {
-                    this.axios.post("/api/specsdelete", { id }).then((res) => {
+                    this.axios.post("/api/seckdelete", { id }).then((res) => {
                         if (res.data.code == 200) {
                             this.$message({
                                 type: "success",
                                 message: "删除成功!",
                             });
-                            this.specsData = res.data.list;
+                            this.seckData = res.data.list;
                         }
                     });
                 })
@@ -100,6 +92,13 @@ export default {
                 });
         },
     },
+    data() {
+        return {
+            seckData: [],
+            begin: [],
+            end: [],
+        };
+    },
 };
 </script>
 
@@ -107,11 +106,7 @@ export default {
 .addbutton {
     margin-bottom: 10px;
 }
-.imgSize {
-    width: 120px;
-    height: 80px;
-}
-.el-tag{
-    margin-right: 5px;
+.margin {
+    margin-bottom: 5px;
 }
 </style>

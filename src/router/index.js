@@ -11,6 +11,12 @@ const router = new vueRouter({
       },
       component: () => import("@/page/index.vue"),
       children: [{
+          path: "/home",
+          component: () => import("../home.vue"),
+          meta: {
+            selected: "/home"
+          }
+        }, {
           path: "menu",
           component: () => import("../page/menu.vue"),
           meta: {
@@ -104,6 +110,63 @@ const router = new vueRouter({
           meta: {
             selected: "/specs"
           }
+        },
+        {
+          path: "goods",
+          component: () => import("../page/list/goods.vue"),
+          meta: {
+            selected: "/goods"
+          }
+        }, {
+          path: "goods/add",
+          component: () => import("../page/list/goodsadd.vue"),
+          meta: {
+            selected: "/goods"
+          }
+        }, {
+          path: "goods/:id",
+          component: () => import("../page/list/goodsadd.vue"),
+          meta: {
+            selected: "/goods"
+          }
+        },
+        {
+          path: "banner",
+          component: () => import("../page/banner/index.vue"),
+          meta: {
+            selected: "/banner"
+          }
+        }, {
+          path: "banner/add",
+          component: () => import("../page/banner/baneradd.vue"),
+          meta: {
+            selected: "/banner"
+          }
+        }, {
+          path: "banner/:id",
+          component: () => import("../page/banner/baneradd.vue"),
+          meta: {
+            selected: "/banner"
+          }
+        },
+        {
+          path: "seck",
+          component: () => import("../page/seck/index.vue"),
+          meta: {
+            selected: "/seck"
+          }
+        }, {
+          path: "seck/add",
+          component: () => import("../page/seck/seckadd.vue"),
+          meta: {
+            selected: "/seck"
+          }
+        }, {
+          path: "seck/:id",
+          component: () => import("../page/seck/seckadd.vue"),
+          meta: {
+            selected: "/seck"
+          }
         }
       ]
     },
@@ -129,6 +192,7 @@ router.beforeEach((to, from, next) => {
       let nexturl = store.state.tableData.menus_url;
       if (nexturl.indexOf("/") == -1) {
         nexturl.push("/")
+        nexturl.push("/home")
       }
       if (nexturl.indexOf(nowurl) != -1) {
         next()

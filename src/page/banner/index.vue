@@ -2,29 +2,20 @@
     <div>
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>商品规格管理</el-breadcrumb-item></el-breadcrumb
+            <el-breadcrumb-item>商品管理</el-breadcrumb-item></el-breadcrumb
         >
         <el-button type="primary" size="medium" @click="add" class="addbutton"
             >添加</el-button
         >
-        <el-table
-            :data="specsData"
-            stripe
-            style="width: 100%"
-            border
-            row-key="id"
-            :tree-props="{ children: 'children' }"
-        >
-            <el-table-column prop="id" label="商品规格编号"> </el-table-column>
-            <el-table-column prop="specsname" label="商品规格名称">
-            </el-table-column>
-            <el-table-column prop="attrs" label="商品规格属性">
-                <template slot-scope="val">
-                    <el-tag type="danger" v-for="(item, ind) in val.row.attrs" :key="ind">
-                        {{ item }}</el-tag
-                    >
+        <el-table :data="bannerData" stripe style="width: 100%" border>
+            <el-table-column prop="id" label="图片编号"> </el-table-column>
+            <el-table-column prop="title" label="图片名称"> </el-table-column>
+            <el-table-column prop="img" label="图片"
+                ><template slot-scope="val">
+                    <img :src="val.row.img" alt="" class="imgSize" />
                 </template>
             </el-table-column>
+
             <el-table-column label="状态">
                 <template slot-scope="item">
                     <el-tag
@@ -36,12 +27,13 @@
                     <el-tag type="danger" size="small" v-else>禁用</el-tag>
                 </template>
             </el-table-column>
+
             <el-table-column label="操作">
                 <template slot-scope="item">
                     <el-button
                         type="primary"
                         size="small"
-                        @click="$router.push('/specs/' + item.row.id)"
+                        @click="$router.push('/banner/' + item.row.id)"
                         >编辑</el-button
                     >
                     <el-button
@@ -59,20 +51,15 @@
 <script>
 export default {
     mounted() {
-        this.axios.get("/api/specslist").then((res) => {
+        this.axios.get("/api/bannerlist").then((res) => {
             if (res.data.code == 200) {
-                this.specsData = res.data.list;
+                this.bannerData = res.data.list;
             }
         });
     },
-    data() {
-        return {
-            specsData: [],
-        };
-    },
     methods: {
         add() {
-            this.$router.push("specs/add");
+            this.$router.push("banner/add");
         },
         del(id) {
             //   this.tableData.splice(v, 1);
@@ -82,13 +69,13 @@ export default {
                 type: "warning",
             })
                 .then(() => {
-                    this.axios.post("/api/specsdelete", { id }).then((res) => {
+                    this.axios.post("/api/bannerdelete", { id }).then((res) => {
                         if (res.data.code == 200) {
                             this.$message({
                                 type: "success",
                                 message: "删除成功!",
                             });
-                            this.specsData = res.data.list;
+                            this.bannerData = res.data.list;
                         }
                     });
                 })
@@ -99,6 +86,11 @@ export default {
                     });
                 });
         },
+    },
+    data() {
+        return {
+            bannerData: [],
+        };
     },
 };
 </script>
@@ -111,7 +103,7 @@ export default {
     width: 120px;
     height: 80px;
 }
-.el-tag{
-    margin-right: 5px;
+.el-pagination {
+    margin-top: 20px;
 }
 </style>

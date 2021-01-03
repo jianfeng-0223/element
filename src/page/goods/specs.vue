@@ -16,19 +16,18 @@
         >
             <el-form-item label="商品规格名称" prop="specsname">
                 <el-input
-                    v-model="specs.specname"
+                    v-model="specs.specsname"
                     placeholder="请输入商品规格名称"
                 ></el-input>
             </el-form-item>
             <el-form-item
                 class="form-btn"
                 label="商品规格属性"
-                prop="attrs"
                 v-for="(val, ind) of attrsarr"
                 :key="ind"
             >
                 <el-input
-                    v-model="specs.attrs"
+                    v-model="val.value"
                     placeholder="请输入商品规格属性"
                 ></el-input>
                 <el-button
@@ -72,17 +71,19 @@ export default {
                 .get("/api/specsinfo?id=" + this.$route.params.id)
                 .then((res) => {
                     if (res.data.code == 200) {
-                        this.specs = res.data.list;
+                        this.specs = res.data.list[0];
+                        this.specs.attrs.map((val, ind) => {
+                            if (ind == 0) {
+                                this.attrsarr[0].value = val;
+                            } else {
+                                this.attrsarr.push({ value: val });
+                            }
+                        });
                     } else {
                         this.$message(res.data.msg);
                     }
                 });
         }
-        this.axios.get("/api/specslist").then((res) => {
-            if (res.data.code == 200) {
-                this.specsarr = res.data.list;
-            }
-        });
     },
     data() {
         return {
@@ -93,7 +94,6 @@ export default {
             ],
 
             tip: "添加",
-            specsarr: [],
             specs: {
                 specsname: "",
                 attrs: "",
@@ -104,13 +104,6 @@ export default {
                     {
                         required: true,
                         message: "请填写规格名称",
-                        trigger: "blur",
-                    },
-                ],
-                attrs: [
-                    {
-                        required: true,
-                        message: "请添加属性",
                         trigger: "blur",
                     },
                 ],
@@ -129,9 +122,16 @@ export default {
             }
         },
         add(specs) {
-            let url = "/api/cateadd";
+            let newarr = [];
+            this.attrsarr.map((val) => {
+                newarr.push(val.value);
+            });
+            // console.log(newarr.join(","));
+            this.specs.attrs = newarr.join(",");
+            // console.log(this.specs);
+            let url = "/api/specsadd";
             if (this.$route.params.id) {
-                url = "/api/cateedit";
+                url = "/api/specsedit";
                 this.specs.id = this.$route.params.id;
             }
             this.$refs[specs].validate((valid) => {

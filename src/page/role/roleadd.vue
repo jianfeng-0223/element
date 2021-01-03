@@ -80,7 +80,7 @@ export default {
                 : "";
             this.$refs[roleform].validate((valid) => {
                 if (valid) {
-                    axios.post(url, this.role).then((res) => {
+                    this.axios.post(url, this.role).then((res) => {
                         if (res.data.code == 200) {
                             this.$router.push("/role");
                         }

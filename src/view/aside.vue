@@ -8,7 +8,7 @@
         text-color="#fff"
         active-text-color="#ffd04b"
     >
-        <el-menu-item index="/"><i class="el-icon-house"></i>首页</el-menu-item>
+        <el-menu-item index="/home"><i class="el-icon-house"></i>首页</el-menu-item>
         <el-submenu
             :index="val.icon"
             v-for="val in tableData ? tableData.menus : []"
