@@ -89,20 +89,12 @@ export default {
                 .then((res) => {
                     if (res.data.code == 200) {
                         this.shop = res.data.list;
+                         this.upload=[{url:this.shop.img}]
                     } else {
                         this.$message(res.data.msg);
                     }
                 });
         }
-        this.axios.get("/api/catelist").then((res) => {
-            if (res.data.code == 200) {
-                this.catearr = res.data.list;
-                if(this.shop.img){
-                    this.upload=[{url:this.shop.img}]
-                }
-                
-            }
-        });
     },
     data() {
         return {

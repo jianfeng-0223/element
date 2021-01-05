@@ -54,7 +54,7 @@
                         v-for="val in catearr3"
                         :key="val.id"
                         :label="val.goodsname"
-                        :value="val.goodsname"
+                        :value="val.id"
                     ></el-option> </el-select
             ></el-form-item>
             <el-form-item label="状态">
@@ -118,6 +118,7 @@ export default {
             this.axios.get("api/catelist", { pid: n }).then((res) => {
                 if (res.data.code == 200) {
                     this.catearr2 = res.data.list;
+                    
                 }
             });
         },
@@ -142,6 +143,9 @@ export default {
                         this.seck.goodsid = this.seck.goodsid
                             ? this.seck.goodsid.split(",")
                             : [];
+                        this.seck.goodsid = this.seck.goodsid.map((val) => {
+                            return Number(val);
+                        });
                         this.changefirst(this.seck.first_cateid);
                         this.changesecond(this.seck.second_cateid);
                     } else {

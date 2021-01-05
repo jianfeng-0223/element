@@ -159,26 +159,12 @@ export default {
                         this.catechange(this.goods.first_cateid);
                         this.specschange(this.goods.specsid);
                         this.editor.txt.html(this.goods.description);
+                        this.upload = [{ url: this.goods.img }];
                     } else {
                         this.$message(res.data.msg);
                     }
                 });
         }
-        this.axios.get("/api/goodslist").then((res) => {
-            if (res.data.code == 200) {
-                this.catearr = res.data.list;
-                if (this.goods.img) {
-                    this.upload = [{ url: this.goods.img }];
-                }
-            }
-        });
-        this.axios
-            .get("/api/goodsinfo", { id: this.$route.params.id })
-            .then((res) => {
-                if (res.data.code == 200) {
-                    this.goods = res.data.list;
-                }
-            });
     },
     data() {
         return {
@@ -187,7 +173,6 @@ export default {
             dialogVisible: false,
             disabled: false,
             upload: [],
-            catearr: [],
             firstarr: [],
             secondarr: [],
             specsidarr: [],

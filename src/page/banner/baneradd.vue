@@ -80,24 +80,16 @@ export default {
                 .then((res) => {
                     if (res.data.code == 200) {
                         this.banner = res.data.list;
+                         this.upload = [{ url: this.banner.img }];
                     } else {
                         this.$message(res.data.msg);
                     }
                 });
         }
-        this.axios.get("/api/bannerlist").then((res) => {
-            if (res.data.code == 200) {
-                this.catearr = res.data.list;
-                if (this.banner.img) {
-                    this.upload = [{ url: this.banner.img }];
-                }
-            }
-        });
     },
     data() {
         return {
             upload: [],
-            catearr: [],
             tip: "添加",
             dialogImageUrl: "",
             dialogVisible: false,
